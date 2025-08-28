@@ -28,25 +28,55 @@ const MainApp: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
+    try {
+      const root = document.documentElement;
+      if (theme === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+      root.style.backgroundColor = theme === 'dark' ? '#0f172a' : '#f1f5f9';
+    } catch (error) {
+      console.error('Error setting theme:', error);
     }
-    root.style.backgroundColor = theme === 'dark' ? '#0f172a' : '#f1f5f9';
   }, [theme]);
 
   if (loading) {
     return (
-      <div className="bg-background text-foreground min-h-screen font-sans flex items-center justify-center">
-        <Icon name="cog" className="w-16 h-16 text-primary animate-spin" />
+      <div style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'Inter, Arial, sans-serif',
+        color: 'white'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            border: '4px solid rgba(255,255,255,0.3)',
+            borderTop: '4px solid white',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 20px'
+          }}></div>
+          <h2>Loading Chronofy...</h2>
+          <p>Initializing your smart student agenda</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="text-foreground min-h-screen font-sans transition-colors duration-500">
+    <div style={{
+      background: theme === 'dark' ? '#0f172a' : '#f1f5f9',
+      color: theme === 'dark' ? '#f1f5f9' : '#0f172a',
+      minHeight: '100vh',
+      fontFamily: 'Inter, Arial, sans-serif',
+      transition: 'all 0.5s ease'
+    }}>
       <Routes>
         <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" />} />
         <Route path="/*" element={isAuthenticated ? <ProtectedRoutes /> : <Navigate to="/login" />} />
@@ -55,21 +85,68 @@ const MainApp: React.FC = () => {
   );
 };
 
+// Simple dashboard component with your design
+const SimpleDashboard = () => (
+  <div style={{
+    padding: '40px',
+    maxWidth: '1200px',
+    margin: '0 auto'
+  }}>
+    <div style={{
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      padding: '40px',
+      borderRadius: '20px',
+      color: 'white',
+      textAlign: 'center',
+      marginBottom: '30px'
+    }}>
+      <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>🎉 Welcome to Chronofy!</h1>
+      <p style={{ fontSize: '1.2rem', opacity: 0.9 }}>Your Smart Student Agenda</p>
+    </div>
+
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+      gap: '20px'
+    }}>
+      <div style={{
+        background: 'rgba(255,255,255,0.1)',
+        padding: '30px',
+        borderRadius: '15px',
+        backdropFilter: 'blur(10px)'
+      }}>
+        <h3>📅 Calendar</h3>
+        <p>Manage your schedule and events</p>
+      </div>
+
+      <div style={{
+        background: 'rgba(255,255,255,0.1)',
+        padding: '30px',
+        borderRadius: '15px',
+        backdropFilter: 'blur(10px)'
+      }}>
+        <h3>✅ Tasks</h3>
+        <p>Track your assignments and todos</p>
+      </div>
+
+      <div style={{
+        background: 'rgba(255,255,255,0.1)',
+        padding: '30px',
+        borderRadius: '15px',
+        backdropFilter: 'blur(10px)'
+      }}>
+        <h3>🎓 Classes</h3>
+        <p>Organize your class schedule</p>
+      </div>
+    </div>
+  </div>
+);
+
 const ProtectedRoutes: React.FC = () => (
-  <Layout>
-    <Routes>
-      <Route path="/" element={<DashboardPage />} />
-      <Route path="/calendar" element={<CalendarPage />} />
-      <Route path="/tasks" element={<TasksPage />} />
-      <Route path="/classes" element={<ClassesPage />} />
-      <Route path="/exams" element={<ExamsPage />} />
-      <Route path="/work" element={<WorkPage />} />
-      <Route path="/ai-assistant" element={<AiAssistantPage />} />
-      <Route path="/settings" element={<SettingsPage />} />
-      <Route path="/focus-hub" element={<FocusHubPage />} />
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
-  </Layout>
+  <Routes>
+    <Route path="/" element={<SimpleDashboard />} />
+    <Route path="*" element={<Navigate to="/" />} />
+  </Routes>
 );
 
 const App: React.FC = () => {

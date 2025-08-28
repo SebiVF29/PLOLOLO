@@ -1,10 +1,11 @@
 
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import React, { useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
-import { AppDataProvider, useAppData } from './contexts/AppContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AppDataProvider } from './contexts/AppContext';
 import { FocusTimerProvider } from './contexts/FocusTimerContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import CalendarPage from './pages/CalendarPage';
@@ -13,29 +14,19 @@ import ExamsPage from './pages/ExamsPage';
 import WorkPage from './pages/WorkPage';
 import AiAssistantPage from './pages/AiAssistantPage';
 import SettingsPage from './pages/SettingsPage';
-import Layout from './components/layout/Layout';
 import ClassesPage from './pages/ClassesPage';
-import { Icon } from './components/ui/Icon';
 import FocusHubPage from './pages/FocusHubPage';
+import Layout from './components/layout/Layout';
+import { Icon } from './components/ui/Icon';
 
-const App: React.FC = () => {
-  return (
-    <ThemeProvider>
-      <AuthProvider>
-          <AppDataProvider>
-            <FocusTimerProvider>
-              <MainApp />
-            </FocusTimerProvider>
-          </AppDataProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  );
-};
+
+
+
 
 const MainApp: React.FC = () => {
   const { theme } = useTheme();
   const { isAuthenticated, loading } = useAuth();
-  
+
   useEffect(() => {
     const root = document.documentElement;
     if (theme === 'dark') {
@@ -62,7 +53,7 @@ const MainApp: React.FC = () => {
       </Routes>
     </div>
   );
-}
+};
 
 const ProtectedRoutes: React.FC = () => (
   <Layout>
@@ -80,6 +71,22 @@ const ProtectedRoutes: React.FC = () => (
     </Routes>
   </Layout>
 );
+
+const App: React.FC = () => {
+  return (
+    <ErrorBoundary>
+      <ThemeProvider>
+        <AuthProvider>
+          <AppDataProvider>
+            <FocusTimerProvider>
+              <MainApp />
+            </FocusTimerProvider>
+          </AppDataProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
+  );
+};
 
 
 export default App;

@@ -27,34 +27,62 @@ const defaultEventColors: EventColorSettings = {
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState<Theme>(() => {
-    const storedTheme = localStorage.getItem('chronofy-theme') as Theme;
-    return storedTheme || 'light';
+    try {
+      const storedTheme = localStorage.getItem('chronofy-theme') as Theme;
+      return storedTheme || 'light';
+    } catch {
+      return 'light';
+    }
   });
 
   const [background, setBackgroundState] = useState<string | null>(() => {
-    return localStorage.getItem('chronofy-background');
+    try {
+      return localStorage.getItem('chronofy-background');
+    } catch {
+      return null;
+    }
   });
 
   const [eventColors, setEventColors] = useState<EventColorSettings>(() => {
-    const saved = localStorage.getItem('chronofy-event-colors');
-    return saved ? { ...defaultEventColors, ...JSON.parse(saved) } : defaultEventColors;
+    try {
+      const saved = localStorage.getItem('chronofy-event-colors');
+      return saved ? { ...defaultEventColors, ...JSON.parse(saved) } : defaultEventColors;
+    } catch {
+      return defaultEventColors;
+    }
   });
 
   const [isBackgroundBlurred, setIsBackgroundBlurred] = useState<boolean>(() => {
-    const saved = localStorage.getItem('chronofy-bg-blur');
-    return saved ? JSON.parse(saved) : true;
+    try {
+      const saved = localStorage.getItem('chronofy-bg-blur');
+      return saved ? JSON.parse(saved) : true;
+    } catch {
+      return true;
+    }
   });
 
   useEffect(() => {
-    localStorage.setItem('chronofy-theme', theme);
+    try {
+      localStorage.setItem('chronofy-theme', theme);
+    } catch (error) {
+      console.warn('Failed to save theme to localStorage:', error);
+    }
   }, [theme]);
 
   useEffect(() => {
-    localStorage.setItem('chronofy-event-colors', JSON.stringify(eventColors));
+    try {
+      localStorage.setItem('chronofy-event-colors', JSON.stringify(eventColors));
+    } catch (error) {
+      console.warn('Failed to save event colors to localStorage:', error);
+    }
   }, [eventColors]);
-  
+
   useEffect(() => {
-    localStorage.setItem('chronofy-bg-blur', JSON.stringify(isBackgroundBlurred));
+    try {
+      localStorage.setItem('chronofy-bg-blur', JSON.stringify(isBackgroundBlurred));
+    } catch (error) {
+      console.warn('Failed to save background blur setting to localStorage:', error);
+    }
   }, [isBackgroundBlurred]);
 
   const toggleTheme = () => {
@@ -62,10 +90,14 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   const setBackground = (image: string | null) => {
-    if (image) {
-      localStorage.setItem('chronofy-background', image);
-    } else {
-      localStorage.removeItem('chronofy-background');
+    try {
+      if (image) {
+        localStorage.setItem('chronofy-background', image);
+      } else {
+        localStorage.removeItem('chronofy-background');
+      }
+    } catch (error) {
+      console.warn('Failed to save background to localStorage:', error);
     }
     setBackgroundState(image);
   };

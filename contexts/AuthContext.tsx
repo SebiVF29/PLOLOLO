@@ -20,24 +20,39 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session?.user) {
-        const appUser: User = {
-          id: session.user.id,
-          email: session.user.email || '',
-          name: session.user.user_metadata.name || session.user.email?.split('@')[0] || 'User',
-        };
-        setUser(appUser);
-      } else {
-        setUser(null);
-      }
+    // Set a timeout to prevent hanging
+    const timeout = setTimeout(() => {
+      console.warn('Auth initialization timeout, proceeding without authentication');
       setLoading(false);
-    });
+    }, 5000); // 5 second timeout
 
-    return () => {
-      subscription.unsubscribe();
-    };
+    try {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        clearTimeout(timeout); // Clear timeout since we got a response
+        setSession(session);
+        if (session?.user) {
+          const appUser: User = {
+            id: session.user.id,
+            email: session.user.email || '',
+            name: session.user.user_metadata.name || session.user.email?.split('@')[0] || 'User',
+          };
+          setUser(appUser);
+        } else {
+          setUser(null);
+        }
+        setLoading(false);
+      });
+
+      return () => {
+        clearTimeout(timeout);
+        subscription.unsubscribe();
+      };
+    } catch (error) {
+      console.error('Error setting up auth listener:', error);
+      clearTimeout(timeout);
+      // Fallback: set loading to false so app doesn't hang
+      setLoading(false);
+    }
   }, []);
 
   const logout = async () => {

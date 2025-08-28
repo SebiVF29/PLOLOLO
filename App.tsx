@@ -189,56 +189,20 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-// Simple working page template
-const WorkingPage = ({ title, icon, description }: { title: string; icon: string; description: string }) => (
-  <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-background/80 dark:bg-background/90">
-    <div className="max-w-7xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-3">
-          <Icon name={icon as any} className="w-8 h-8 text-primary" />
-          {title}
-        </h1>
-        <p className="text-foreground/70">{description}</p>
-      </div>
 
-      <div className="bg-card text-card-foreground p-8 rounded-2xl shadow-lg">
-        <div className="text-center mb-6">
-          <Icon name={icon as any} className="w-16 h-16 text-primary mx-auto mb-4" />
-          <h2 className="text-2xl font-semibold mb-2">{title}</h2>
-          <p className="text-foreground/70">Your {title.toLowerCase()} functionality is being restored safely.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="bg-primary/10 text-primary p-4 rounded-lg text-center">
-            <Icon name="check-circle" className="w-8 h-8 mx-auto mb-2" />
-            <p className="font-medium">Design Preserved</p>
-          </div>
-          <div className="bg-secondary/10 text-secondary p-4 rounded-lg text-center">
-            <Icon name="shield-check" className="w-8 h-8 mx-auto mb-2" />
-            <p className="font-medium">No White Screen</p>
-          </div>
-          <div className="bg-accent/10 text-accent p-4 rounded-lg text-center">
-            <Icon name="sparkles" className="w-8 h-8 mx-auto mb-2" />
-            <p className="font-medium">Functionality Coming</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-);
 
 const ProtectedRoutes: React.FC = () => (
   <AppLayout>
     <Routes>
       <Route path="/" element={<DashboardContent />} />
-      <Route path="/calendar" element={<WorkingPage title="Calendar" icon="calendar" description="Manage your schedule and events" />} />
+      <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/tasks" element={<TasksPage />} />
-      <Route path="/focus-hub" element={<WorkingPage title="Focus Hub" icon="clock" description="Boost your productivity with focus sessions" />} />
-      <Route path="/classes" element={<WorkingPage title="Classes" icon="book-open" description="Organize your class schedule" />} />
-      <Route path="/exams" element={<WorkingPage title="Exams" icon="academic-cap" description="Track your upcoming exams" />} />
-      <Route path="/work" element={<WorkingPage title="Work" icon="briefcase" description="Manage your work tasks" />} />
-      <Route path="/ai-assistant" element={<WorkingPage title="AI Assistant" icon="sparkles" description="Get help with your studies" />} />
-      <Route path="/settings" element={<WorkingPage title="Settings" icon="cog" description="Customize your Chronofy experience" />} />
+      <Route path="/focus-hub" element={<FocusHubPage />} />
+      <Route path="/classes" element={<ClassesPage />} />
+      <Route path="/exams" element={<ExamsPage />} />
+      <Route path="/work" element={<WorkPage />} />
+      <Route path="/ai-assistant" element={<AiAssistantPage />} />
+      <Route path="/settings" element={<SettingsPage />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   </AppLayout>

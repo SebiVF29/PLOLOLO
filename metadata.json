@@ -1,0 +1,8 @@
+{
+  "name": "Chronofy",
+  "description": "A smart, personalized agenda app designed for college students to simplify their academic and personal life by organizing time, intelligently, and effortlessly.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "prompt": ""
+}

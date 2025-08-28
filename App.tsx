@@ -16,7 +16,6 @@ import AiAssistantPage from './pages/AiAssistantPage';
 import SettingsPage from './pages/SettingsPage';
 import ClassesPage from './pages/ClassesPage';
 import FocusHubPage from './pages/FocusHubPage';
-import Layout from './components/layout/Layout';
 import { Icon } from './components/ui/Icon';
 
 
@@ -180,29 +179,7 @@ const DashboardContent = () => {
   );
 };
 
-// Simple page template with your design
-const SimplePage = ({ title, icon, description }: { title: string; icon: string; description: string }) => (
-  <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-background/80 dark:bg-background/90">
-    <div className="max-w-7xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-3">
-          <Icon name={icon as any} className="w-8 h-8 text-primary" />
-          {title}
-        </h1>
-        <p className="text-foreground/70">{description}</p>
-      </div>
 
-      <div className="bg-card text-card-foreground p-8 rounded-2xl shadow-lg text-center">
-        <Icon name={icon as any} className="w-16 h-16 text-primary mx-auto mb-4" />
-        <h2 className="text-2xl font-semibold mb-2">{title} Coming Soon!</h2>
-        <p className="text-foreground/70 mb-6">This section is being developed with your beautiful design in mind.</p>
-        <div className="bg-primary/10 text-primary px-4 py-2 rounded-lg inline-block">
-          <span className="font-medium">✨ Your design will be preserved</span>
-        </div>
-      </div>
-    </div>
-  </main>
-);
 
 // Layout wrapper
 const AppLayout = ({ children }: { children: React.ReactNode }) => (
@@ -216,14 +193,14 @@ const ProtectedRoutes: React.FC = () => (
   <AppLayout>
     <Routes>
       <Route path="/" element={<DashboardContent />} />
-      <Route path="/calendar" element={<SimplePage title="Calendar" icon="calendar" description="Manage your schedule and events" />} />
-      <Route path="/tasks" element={<SimplePage title="To-Do List" icon="check-circle" description="Track your assignments and todos" />} />
-      <Route path="/focus-hub" element={<SimplePage title="Focus Hub" icon="clock" description="Boost your productivity with focus sessions" />} />
-      <Route path="/classes" element={<SimplePage title="Classes" icon="book-open" description="Organize your class schedule" />} />
-      <Route path="/exams" element={<SimplePage title="Exams" icon="academic-cap" description="Track your upcoming exams" />} />
-      <Route path="/work" element={<SimplePage title="Work" icon="briefcase" description="Manage your work tasks" />} />
-      <Route path="/ai-assistant" element={<SimplePage title="AI Assistant" icon="sparkles" description="Get help with your studies" />} />
-      <Route path="/settings" element={<SimplePage title="Settings" icon="cog" description="Customize your Chronofy experience" />} />
+      <Route path="/calendar" element={<CalendarPage />} />
+      <Route path="/tasks" element={<TasksPage />} />
+      <Route path="/focus-hub" element={<FocusHubPage />} />
+      <Route path="/classes" element={<ClassesPage />} />
+      <Route path="/exams" element={<ExamsPage />} />
+      <Route path="/work" element={<WorkPage />} />
+      <Route path="/ai-assistant" element={<AiAssistantPage />} />
+      <Route path="/settings" element={<SettingsPage />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   </AppLayout>

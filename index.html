@@ -76,7 +76,27 @@
 <link rel="stylesheet" href="/index.css">
 </head>
   <body>
-    <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
+    <div id="root">
+      <!-- Fallback content while React loads -->
+      <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div style="text-align: center;">
+          <h2>Loading Chronofy...</h2>
+          <p>If this message persists, there may be a JavaScript error.</p>
+          <p>Please check the browser console (F12) for details.</p>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/index.tsx?v=2"></script>
+    <script>
+      // Debug script to help identify issues
+      console.log('HTML loaded, waiting for React...');
+      setTimeout(() => {
+        const root = document.getElementById('root');
+        if (root && root.innerHTML.includes('Loading Chronofy')) {
+          console.error('React failed to mount after 5 seconds');
+          root.innerHTML = '<div style="padding: 20px; color: red; font-family: Arial;"><h1>React Loading Failed</h1><p>Check browser console for errors</p></div>';
+        }
+      }, 5000);
+    </script>
 </body>
 </html>

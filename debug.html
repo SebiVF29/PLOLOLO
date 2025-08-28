@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Chronofy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+            line-height: 1.6;
+        }
+        .test-item {
+            background: #16213e;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #0f3460;
+        }
+        .success { border-left-color: #4caf50; }
+        .error { border-left-color: #f44336; }
+        .warning { border-left-color: #ff9800; }
+        pre {
+            background: #0a0a0a;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Chronofy Debug Dashboard</h1>
+    <p>This page will help us identify what's causing the white screen issue.</p>
+
+    <div id="tests">
+        <div class="test-item">
+            <h3>1. Basic HTML/CSS Loading</h3>
+            <p id="html-test">✅ HTML and CSS are loading correctly (you can see this page)</p>
+        </div>
+
+        <div class="test-item" id="js-test">
+            <h3>2. JavaScript Execution</h3>
+            <p>⏳ Testing JavaScript...</p>
+        </div>
+
+        <div class="test-item" id="module-test">
+            <h3>3. ES6 Modules</h3>
+            <p>⏳ Testing module imports...</p>
+        </div>
+
+        <div class="test-item" id="react-test">
+            <h3>4. React Loading</h3>
+            <p>⏳ Testing React import...</p>
+        </div>
+
+        <div class="test-item" id="dom-test">
+            <h3>5. DOM Manipulation</h3>
+            <p>⏳ Testing DOM access...</p>
+        </div>
+
+        <div class="test-item" id="console-test">
+            <h3>6. Console Errors</h3>
+            <p>Check browser console for any errors. Press F12 to open developer tools.</p>
+        </div>
+    </div>
+
+    <div class="test-item">
+        <h3>7. Network Requests</h3>
+        <p>Check the Network tab in developer tools to see if any resources are failing to load.</p>
+    </div>
+
+    <script>
+        console.log('🔍 Debug script starting...');
+        
+        // Test 2: JavaScript
+        try {
+            document.getElementById('js-test').className = 'test-item success';
+            document.getElementById('js-test').innerHTML = '<h3>2. JavaScript Execution</h3><p>✅ JavaScript is working</p>';
+            console.log('✅ JavaScript test passed');
+        } catch (e) {
+            console.error('❌ JavaScript test failed:', e);
+        }
+
+        // Test 3: ES6 Modules
+        import('./test-module.js').then(() => {
+            document.getElementById('module-test').className = 'test-item success';
+            document.getElementById('module-test').innerHTML = '<h3>3. ES6 Modules</h3><p>✅ ES6 modules are working</p>';
+            console.log('✅ ES6 modules test passed');
+        }).catch(e => {
+            document.getElementById('module-test').className = 'test-item error';
+            document.getElementById('module-test').innerHTML = '<h3>3. ES6 Modules</h3><p>❌ ES6 modules failed: ' + e.message + '</p>';
+            console.error('❌ ES6 modules test failed:', e);
+        });
+
+        // Test 4: React
+        import('react').then(React => {
+            document.getElementById('react-test').className = 'test-item success';
+            document.getElementById('react-test').innerHTML = '<h3>4. React Loading</h3><p>✅ React imported successfully</p>';
+            console.log('✅ React test passed');
+        }).catch(e => {
+            document.getElementById('react-test').className = 'test-item error';
+            document.getElementById('react-test').innerHTML = '<h3>4. React Loading</h3><p>❌ React import failed: ' + e.message + '</p>';
+            console.error('❌ React test failed:', e);
+        });
+
+        // Test 5: DOM
+        try {
+            const rootElement = document.getElementById('root');
+            const testDiv = document.createElement('div');
+            document.getElementById('dom-test').className = 'test-item success';
+            document.getElementById('dom-test').innerHTML = '<h3>5. DOM Manipulation</h3><p>✅ DOM access working. Root element: ' + (rootElement ? 'Found' : 'Not found') + '</p>';
+            console.log('✅ DOM test passed. Root element:', rootElement);
+        } catch (e) {
+            document.getElementById('dom-test').className = 'test-item error';
+            document.getElementById('dom-test').innerHTML = '<h3>5. DOM Manipulation</h3><p>❌ DOM access failed: ' + e.message + '</p>';
+            console.error('❌ DOM test failed:', e);
+        }
+
+        // Capture console errors
+        window.addEventListener('error', function(e) {
+            console.error('Global error caught:', e.error);
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'test-item error';
+            errorDiv.innerHTML = '<h3>❌ Runtime Error Detected</h3><pre>' + e.error.stack + '</pre>';
+            document.getElementById('tests').appendChild(errorDiv);
+        });
+
+        console.log('🔍 Debug script completed');
+    </script>
+</body>
+</html>

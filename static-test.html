@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Test - Chronofy</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: 'Inter', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .status {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .success { background: rgba(76, 175, 80, 0.3); }
+        .error { background: rgba(244, 67, 54, 0.3); }
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Chronofy Server Test</h1>
+        <p>This is a static HTML test to verify the server is working correctly.</p>
+        
+        <div class="status success">
+            <strong>✅ HTML Loading:</strong> Working (you can see this page)
+        </div>
+        
+        <div class="status success">
+            <strong>✅ CSS Styling:</strong> Working (page is styled)
+        </div>
+        
+        <div class="status" id="js-status">
+            <strong>⏳ JavaScript:</strong> Testing...
+        </div>
+        
+        <div class="status" id="fetch-status">
+            <strong>⏳ Network Requests:</strong> Testing...
+        </div>
+        
+        <div class="status">
+            <strong>🌐 Server URL:</strong> <span id="current-url"></span>
+        </div>
+        
+        <div class="status">
+            <strong>🕒 Current Time:</strong> <span id="current-time"></span>
+        </div>
+        
+        <button onclick="testReactApp()">Test React App</button>
+        <button onclick="window.location.href='/debug.html'">Debug Page</button>
+        <button onclick="window.location.reload()">Reload Page</button>
+        
+        <div id="test-results"></div>
+    </div>
+
+    <script>
+        console.log('Static test page loaded');
+        
+        // Test JavaScript
+        try {
+            document.getElementById('js-status').className = 'status success';
+            document.getElementById('js-status').innerHTML = '<strong>✅ JavaScript:</strong> Working';
+            console.log('JavaScript test passed');
+        } catch (e) {
+            document.getElementById('js-status').className = 'status error';
+            document.getElementById('js-status').innerHTML = '<strong>❌ JavaScript:</strong> Failed - ' + e.message;
+            console.error('JavaScript test failed:', e);
+        }
+        
+        // Show current URL and time
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('current-time').textContent = new Date().toLocaleString();
+        
+        // Test fetch to main app
+        fetch('/')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('fetch-status').className = 'status success';
+                    document.getElementById('fetch-status').innerHTML = '<strong>✅ Network Requests:</strong> Working';
+                } else {
+                    throw new Error('HTTP ' + response.status);
+                }
+            })
+            .catch(e => {
+                document.getElementById('fetch-status').className = 'status error';
+                document.getElementById('fetch-status').innerHTML = '<strong>❌ Network Requests:</strong> Failed - ' + e.message;
+            });
+        
+        function testReactApp() {
+            console.log('Testing React app...');
+            window.location.href = '/';
+        }
+        
+        // Auto-refresh time every second
+        setInterval(() => {
+            document.getElementById('current-time').textContent = new Date().toLocaleString();
+        }, 1000);
+    </script>
+</body>
+</html>

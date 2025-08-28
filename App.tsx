@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, NavLink, useNavigate } from 'react-router-dom';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AppDataProvider } from './contexts/AppContext';
@@ -63,87 +63,170 @@ const MainApp: React.FC = () => {
   );
 };
 
-// Minimal working dashboard with your exact design
-const WorkingDashboard = () => {
-  const { user } = useAuth();
+// Working sidebar component with navigation
+const WorkingSidebar = () => {
+  const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
+  const navItems = [
+    { to: '/', icon: 'home', text: 'Dashboard' },
+    { to: '/calendar', icon: 'calendar', text: 'Calendar' },
+    { to: '/tasks', icon: 'check-circle', text: 'To-Do List' },
+    { to: '/focus-hub', icon: 'clock', text: 'Focus Hub' },
+    { to: '/classes', icon: 'book-open', text: 'Classes' },
+    { to: '/exams', icon: 'academic-cap', text: 'Exams' },
+    { to: '/work', icon: 'briefcase', text: 'Work' },
+    { to: '/ai-assistant', icon: 'sparkles', text: 'AI Assistant' },
+    { to: '/settings', icon: 'cog', text: 'Settings' },
+  ];
 
   return (
-    <div className="h-screen w-full flex">
-      {/* Your Sidebar */}
-      <aside className="w-64 bg-card text-card-foreground p-4 flex flex-col shadow-lg">
-        <div className="flex items-center gap-2 mb-8">
-          <Icon name="academic-cap" className="w-8 h-8 text-primary"/>
-          <h1 className="text-2xl font-bold text-primary">Chronofy</h1>
+    <aside className="w-64 bg-card text-card-foreground p-4 flex flex-col shadow-lg">
+      <div className="flex items-center gap-2 mb-8">
+        <Icon name="academic-cap" className="w-8 h-8 text-primary"/>
+        <h1 className="text-2xl font-bold text-primary">Chronofy</h1>
+      </div>
+      <nav className="flex-1">
+        <ul>
+          {navItems.map((item) => (
+            <li key={item.to}>
+              <NavLink
+                to={item.to}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 my-1 rounded-lg transition-colors duration-200 ${
+                    isActive ? 'bg-primary/10 text-primary font-semibold' : 'hover:bg-foreground/5'
+                  }`
+                }
+              >
+                <Icon name={item.icon as any} className="w-5 h-5" />
+                <span>{item.text}</span>
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div className="mt-auto space-y-2">
+        <button
+          onClick={toggleTheme}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-foreground/5 w-full text-left"
+        >
+          <Icon name={theme === 'dark' ? 'sun' : 'moon'} className="w-5 h-5" />
+          <span>{theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
+        </button>
+        <div className="flex items-center gap-3 px-3 py-2.5">
+          <Icon name="user" className="w-5 h-5" />
+          <span className="text-sm">{user?.name}</span>
         </div>
-        <nav className="flex-1">
-          <div className="flex items-center gap-3 px-3 py-2.5 my-1 rounded-lg bg-primary/10 text-primary font-semibold">
-            <Icon name="home" className="w-5 h-5" />
-            <span>Dashboard</span>
-          </div>
-        </nav>
-        <div className="mt-auto space-y-2">
-          <button
-            onClick={toggleTheme}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-foreground/5 w-full text-left"
-          >
-            <Icon name={theme === 'dark' ? 'sun' : 'moon'} className="w-5 h-5" />
-            <span>{theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
-          </button>
-          <div className="flex items-center gap-3 px-3 py-2.5">
-            <Icon name="user" className="w-5 h-5" />
-            <span className="text-sm">{user?.name}</span>
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-background/80 dark:bg-background/90">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Welcome back, {user?.name}!</h1>
-            <p className="text-foreground/70">Here's what's happening with your studies today.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-lg">
-              <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                <Icon name="check-circle" className="w-5 h-5 text-primary" />
-                Tasks
-              </h3>
-              <p className="text-2xl font-bold text-primary">0</p>
-              <p className="text-sm text-foreground/70">Completed today</p>
-            </div>
-
-            <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-lg">
-              <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                <Icon name="calendar" className="w-5 h-5 text-secondary" />
-                Events
-              </h3>
-              <p className="text-2xl font-bold text-secondary">0</p>
-              <p className="text-sm text-foreground/70">Scheduled today</p>
-            </div>
-
-            <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-lg">
-              <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                <Icon name="academic-cap" className="w-5 h-5 text-accent" />
-                Classes
-              </h3>
-              <p className="text-2xl font-bold text-accent">0</p>
-              <p className="text-sm text-foreground/70">This week</p>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-foreground/5 w-full text-left text-red-500"
+        >
+          <Icon name="logout" className="w-5 h-5" />
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
   );
 };
 
+// Working dashboard content
+const DashboardContent = () => {
+  const { user } = useAuth();
+
+  return (
+    <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-background/80 dark:bg-background/90">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2">Welcome back, {user?.name}!</h1>
+          <p className="text-foreground/70">Here's what's happening with your studies today.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-lg">
+            <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+              <Icon name="check-circle" className="w-5 h-5 text-primary" />
+              Tasks
+            </h3>
+            <p className="text-2xl font-bold text-primary">0</p>
+            <p className="text-sm text-foreground/70">Completed today</p>
+          </div>
+
+          <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-lg">
+            <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+              <Icon name="calendar" className="w-5 h-5 text-secondary" />
+              Events
+            </h3>
+            <p className="text-2xl font-bold text-secondary">0</p>
+            <p className="text-sm text-foreground/70">Scheduled today</p>
+          </div>
+
+          <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-lg">
+            <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+              <Icon name="academic-cap" className="w-5 h-5 text-accent" />
+              Classes
+            </h3>
+            <p className="text-2xl font-bold text-accent">0</p>
+            <p className="text-sm text-foreground/70">This week</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+};
+
+// Simple page template with your design
+const SimplePage = ({ title, icon, description }: { title: string; icon: string; description: string }) => (
+  <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-background/80 dark:bg-background/90">
+    <div className="max-w-7xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-3">
+          <Icon name={icon as any} className="w-8 h-8 text-primary" />
+          {title}
+        </h1>
+        <p className="text-foreground/70">{description}</p>
+      </div>
+
+      <div className="bg-card text-card-foreground p-8 rounded-2xl shadow-lg text-center">
+        <Icon name={icon as any} className="w-16 h-16 text-primary mx-auto mb-4" />
+        <h2 className="text-2xl font-semibold mb-2">{title} Coming Soon!</h2>
+        <p className="text-foreground/70 mb-6">This section is being developed with your beautiful design in mind.</p>
+        <div className="bg-primary/10 text-primary px-4 py-2 rounded-lg inline-block">
+          <span className="font-medium">✨ Your design will be preserved</span>
+        </div>
+      </div>
+    </div>
+  </main>
+);
+
+// Layout wrapper
+const AppLayout = ({ children }: { children: React.ReactNode }) => (
+  <div className="h-screen w-full flex">
+    <WorkingSidebar />
+    {children}
+  </div>
+);
+
 const ProtectedRoutes: React.FC = () => (
-  <Routes>
-    <Route path="/" element={<WorkingDashboard />} />
-    <Route path="*" element={<Navigate to="/" />} />
-  </Routes>
+  <AppLayout>
+    <Routes>
+      <Route path="/" element={<DashboardContent />} />
+      <Route path="/calendar" element={<SimplePage title="Calendar" icon="calendar" description="Manage your schedule and events" />} />
+      <Route path="/tasks" element={<SimplePage title="To-Do List" icon="check-circle" description="Track your assignments and todos" />} />
+      <Route path="/focus-hub" element={<SimplePage title="Focus Hub" icon="clock" description="Boost your productivity with focus sessions" />} />
+      <Route path="/classes" element={<SimplePage title="Classes" icon="book-open" description="Organize your class schedule" />} />
+      <Route path="/exams" element={<SimplePage title="Exams" icon="academic-cap" description="Track your upcoming exams" />} />
+      <Route path="/work" element={<SimplePage title="Work" icon="briefcase" description="Manage your work tasks" />} />
+      <Route path="/ai-assistant" element={<SimplePage title="AI Assistant" icon="sparkles" description="Get help with your studies" />} />
+      <Route path="/settings" element={<SimplePage title="Settings" icon="cog" description="Customize your Chronofy experience" />} />
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+  </AppLayout>
 );
 
 const App: React.FC = () => {

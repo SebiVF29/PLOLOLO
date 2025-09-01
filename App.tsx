@@ -237,7 +237,7 @@ const ProtectedRoutes: React.FC = () => (
       <Route path="/tasks" element={<TasksPage />} />
       <Route path="/focus-hub" element={<FocusHubPage />} />
       <Route path="/classes" element={<ClassesPage />} />
-      <Route path="/exams" element={<SafeWorkingPage title="Exams" icon="academic-cap" description="Track your upcoming exams" />} />
+      <Route path="/exams" element={<ExamsPage />} />
       <Route path="/work" element={<SafeWorkingPage title="Work" icon="briefcase" description="Manage your work tasks" />} />
       <Route path="/ai-assistant" element={<SafeWorkingPage title="AI Assistant" icon="sparkles" description="Get help with your studies" />} />
       <Route path="/settings" element={<SafeWorkingPage title="Settings" icon="cog" description="Customize your Chronofy experience" />} />
